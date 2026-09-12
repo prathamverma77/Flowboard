@@ -1,38 +1,74 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ==========================================
+# FlowBoard Root .gitignore (Monorepo)
+# ==========================================
 
-# Dependencies
-node_modules
+# ------------------------------------------
+# Environment & Secret Files
+# ------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ------------------------------------------
+# Python (Backend & Websockets)
+# ------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Prisma Python / JS artifacts
+prisma/client/
+generated/prisma/
+.prisma/
+
+# ------------------------------------------
+# Node.js & Monorepo (Frontend & Packages)
+# ------------------------------------------
+node_modules/
 .pnp
 .pnp.js
+.yarn/
+.turbo/
+.vercel/
 
-# Local env files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Testing
-coverage
-
-# Turbo
-.turbo
-
-# Vercel
-.vercel
-
-# Build Outputs
+# Build & Bundler Outputs
 .next/
 out/
-build
-dist
+build/
+dist/
+*.tsbuildinfo
 
-
-# Debug
+# Logs & Debugging
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 
-# Misc
+# ------------------------------------------
+# OS & IDE Specific
+# ------------------------------------------
 .DS_Store
-*.pem
+Thumbs.db
+ehthumbs.db
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
