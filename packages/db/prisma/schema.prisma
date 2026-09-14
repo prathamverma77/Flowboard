@@ -1,18 +1,79 @@
-
-
-
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
-model User{
-    id String @id @default(cuid())
-    username String @unique
-    password String
+enum Role {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+model User {
+  id          String       @id @default(cuid())
+  email       String       @unique
+  password    String
+  memberships Membership[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Organization {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  memberships Membership[]
+  boards      Board[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Membership {
+  id           String       @id @default(cuid())
+  userId       String
+  orgId        String
+  role         Role         @default(MEMBER)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@unique([userId, orgId])
+}
+
+model Board {
+  id           String       @id @default(cuid())
+  title        String
+  orgId        String
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  sections     Section[]
+  issues       Issue[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+}
+
+model Section {
+  id        String   @id @default(cuid())
+  title     String
+  boardId   String
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  issues    Issue[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Issue {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  boardId     String
+  sectionId   String
+  board       Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  section     Section  @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
